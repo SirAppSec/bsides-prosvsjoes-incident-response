@@ -1,0 +1,553 @@
+<?xml version="1.0"?>
+<pfsense>
+	<version>22.2</version>
+	<lastchange></lastchange>
+	<system>
+		<optimization>normal</optimization>
+		<hostname>pfsense</hostname>
+		<domain>charon.bslv.prod.ctf</domain>
+		<timeservers>2.pfsense.pool.ntp.org</timeservers>
+		<!-- <webgui> -->
+		<!-- 	<protocol>https</protocol> -->
+		<!-- 	<loginautocomplete></loginautocomplete> -->
+		<!-- 	<ssl-certref>63141ce592dff</ssl-certref> -->
+		<!-- 	<dashboardcolumns>2</dashboardcolumns> -->
+		<!-- 	<webguicss>pfSense.css</webguicss> -->
+		<!-- 	<logincss>1e3f75;</logincss> -->
+		<!-- </webgui> -->
+		<disablenatreflection>yes</disablenatreflection>
+		<disablesegmentationoffloading></disablesegmentationoffloading>
+		<disablelargereceiveoffloading></disablelargereceiveoffloading>
+		<ipv6allow></ipv6allow>
+		<maximumtableentries>400000</maximumtableentries>
+		<powerd_ac_mode>hadp</powerd_ac_mode>
+		<powerd_battery_mode>hadp</powerd_battery_mode>
+		<powerd_normal_mode>hadp</powerd_normal_mode>
+		<bogons>
+			<interval>monthly</interval>
+		</bogons>
+		<hn_altq_enable></hn_altq_enable>
+		<!-- <ssh> -->
+		<!-- 	<enable>enabled</enable> -->
+		<!-- </ssh> -->
+		<earlyshellcmd>service qemu-guest-agent start</earlyshellcmd>
+		<earlyshellcmd>service cloudinit start; service cloudconfig start; service cloudfinal start</earlyshellcmd>
+		<sshguard_whitelist>10.0.0.0/8</sshguard_whitelist>
+		<sshguard_threshold></sshguard_threshold>
+		<sshguard_blocktime></sshguard_blocktime>
+		<sshguard_detection_time></sshguard_detection_time>
+		<disablechecksumoffloading></disablechecksumoffloading>
+		<language>en_US</language>
+		<timezone>America/Los_Angeles</timezone>
+		<dnsserver>8.8.8.8</dnsserver>
+		<dnsallowoverride></dnsallowoverride>
+	</system>
+	<interfaces>
+		<wan>
+			<enable></enable>
+			<if>vtnet0</if>
+			<ipaddr>100.80.4.30</ipaddr>
+			<subnet>27</subnet>
+			<media></media>
+			<mediaopt></mediaopt>
+			<mtu>1500</mtu>
+			<gateway>wangw</gateway>
+		</wan>
+		<lan>
+			<enable></enable>
+			<if>vtnet1</if>
+			<ipaddr>100.80.4.129</ipaddr>
+			<subnet>25</subnet>
+			<media></media>
+			<mediaopt></mediaopt>
+			<mtu>1500</mtu>
+		</lan>
+		<dmz>
+			<enable></enable>
+			<if>vtnet2</if>
+			<ipaddr>100.80.5.1</ipaddr>
+			<subnet>25</subnet>
+			<media></media>
+			<mediaopt></mediaopt>
+			<mtu>1500</mtu>
+		</dmz>
+		<datacenter>
+			<enable></enable>
+			<if>vtnet3</if>
+			<ipaddr>100.80.5.129</ipaddr>
+			<subnet>25</subnet>
+			<media></media>
+			<mediaopt></mediaopt>
+			<mtu>1500</mtu>
+		</datacenter>
+	</interfaces>
+	<staticroutes></staticroutes>
+	<dhcpd>
+		<lan>
+			<enable></enable>
+			<range>
+				<from>100.80.4.241</from>
+				<to>100.80.4.254</to>
+			</range>
+		</lan>
+		<dmz>
+			<enable></enable>
+			<range>
+				<from>100.80.5.113</from>
+				<to>100.80.5.126</to>
+			</range>
+		</dmz>
+		<datacenter>
+			<enable></enable>
+			<range>
+				<from>100.80.5.241</from>
+				<to>100.80.5.254</to>
+			</range>
+		</datacenter>
+	</dhcpd>
+	<dhcpdv6></dhcpdv6>
+	<snmpd>
+		<syslocation></syslocation>
+		<syscontact></syscontact>
+		<rocommunity>public</rocommunity>
+	</snmpd>
+	<diag>
+		<ipv6nat>
+			<ipaddr></ipaddr>
+		</ipv6nat>
+	</diag>
+	<syslog>
+		<filterdescriptions>1</filterdescriptions>
+		<nentries>500</nentries>
+		<logcompressiontype>none</logcompressiontype>
+		<format>rfc3164</format>
+		<rotatecount></rotatecount>
+		<remoteserver>10.1.100.4</remoteserver>
+		<remoteserver2></remoteserver2>
+		<remoteserver3></remoteserver3>
+		<sourceip></sourceip>
+		<ipproto>ipv4</ipproto>
+		<logall></logall>
+		<logconfigchanges>enabled</logconfigchanges>
+		<enable></enable>
+		<reverse></reverse>
+	</syslog>
+	<filter>
+		<rule>
+			<type>pass</type>
+			<ipprotocol>inet46</ipprotocol>
+			<interface>wan</interface>
+			<protocol>tcp</protocol>
+			<source>
+				<any></any>
+			</source>
+			<destination>
+				<network>(self)</network>
+				<port>22</port>
+			</destination>
+			<descr><![CDATA[Allow SSH to This Firewall]]></descr>
+		</rule>
+		<rule>
+			<type>pass</type>
+			<ipprotocol>inet46</ipprotocol>
+			<interface>wan</interface>
+			<protocol>tcp</protocol>
+			<source>
+				<any></any>
+			</source>
+			<destination>
+				<network>(self)</network>
+				<port>443</port>
+			</destination>
+			<descr><![CDATA[Allow HTTPS to This Firewall]]></descr>
+		</rule>
+		<rule>
+			<type>pass</type>
+			<ipprotocol>inet46</ipprotocol>
+			<interface>wan</interface>
+			<protocol>icmp</protocol>
+			<icmptype>echorep,echoreq,timex,unreach</icmptype>
+			<source>
+				<any></any>
+			</source>
+			<destination>
+				<network>(self)</network>
+			</destination>
+			<descr><![CDATA[Allow ICMP to This Firewall]]></descr>
+		</rule>
+		<rule>
+			<type>pass</type>
+			<ipprotocol>inet46</ipprotocol>
+			<interface>lan</interface>
+			<protocol>icmp</protocol>
+			<icmptype>echorep,echoreq,timex,unreach</icmptype>
+			<source>
+				<any></any>
+			</source>
+			<destination>
+				<network>(self)</network>
+			</destination>
+			<descr><![CDATA[Allow ICMP to This Firewall]]></descr>
+		</rule>
+		<rule>
+			<type>pass</type>
+			<ipprotocol>inet46</ipprotocol>
+			<interface>wan</interface>
+			<protocol>icmp</protocol>
+			<icmptype>echorep,echoreq,timex,unreach</icmptype>
+			<source>
+				<any></any>
+			</source>
+			<destination>
+				<any></any>
+			</destination>
+			<descr><![CDATA[Allow ICMP to Any]]></descr>
+		</rule>
+		<rule>
+			<type>pass</type>
+			<ipprotocol>inet46</ipprotocol>
+			<interface>wan</interface>
+			<protocol>tcp</protocol>
+			<source>
+				<any></any>
+			</source>
+			<destination>
+				<any></any>
+				<port>22</port>
+			</destination>
+			<descr><![CDATA[Allow SSH to LAN]]></descr>
+		</rule>
+		<rule>
+			<type>pass</type>
+			<ipprotocol>inet46</ipprotocol>
+			<interface>lan</interface>
+			<protocol>tcp/udp</protocol>
+			<source>
+				<any></any>
+			</source>
+			<destination>
+				<network>(self)</network>
+			</destination>
+			<descr><![CDATA[Allow DNS to This Firewall]]></descr>
+		</rule>
+		<rule>
+			<type>pass</type>
+			<ipprotocol>inet46</ipprotocol>
+			<interface>lan</interface>
+			<protocol>icmp</protocol>
+			<icmptype>echorep,echoreq,timex,unreach</icmptype>
+			<source>
+				<any></any>
+			</source>
+			<destination>
+				<any></any>
+			</destination>
+			<descr><![CDATA[Allow ICMP to Any]]></descr>
+		</rule>
+		<rule>
+			<type>pass</type>
+			<ipprotocol>inet46</ipprotocol>
+			<interface>lan</interface>
+			<protocol>tcp</protocol>
+			<source>
+				<any></any>
+			</source>
+			<destination>
+				<any></any>
+				<port>80</port>
+			</destination>
+			<descr><![CDATA[Allow LAN to HTTP]]></descr>
+		</rule>
+		<rule>
+			<type>pass</type>
+			<ipprotocol>inet46</ipprotocol>
+			<interface>lan</interface>
+			<protocol>tcp</protocol>
+			<source>
+				<any></any>
+			</source>
+			<destination>
+				<any></any>
+				<port>443</port>
+			</destination>
+			<descr><![CDATA[Allow LAN to HTTPS]]></descr>
+		</rule>
+		<rule>
+			<type>pass</type>
+			<source>
+				<any></any>
+			</source>
+			<destination>
+				<any></any>
+			</destination>
+			<os></os>
+			<interface>lan</interface>
+			<statetype><![CDATA[keep state]]></statetype>
+			<descr><![CDATA[Allow Network Monitoring]]></descr>
+			<tag></tag>
+		</rule>
+		<rule>
+			<type>pass</type>
+			<source>
+				<any></any>
+			</source>
+			<destination>
+				<any></any>
+			</destination>
+			<os></os>
+			<interface>dmz</interface>
+			<statetype><![CDATA[keep state]]></statetype>
+			<descr><![CDATA[Allow Network Monitoring]]></descr>
+			<tag></tag>
+		</rule>
+		<rule>
+			<type>pass</type>
+			<source>
+				<any></any>
+			</source>
+			<destination>
+				<any></any>
+			</destination>
+			<os></os>
+			<interface>datacenter</interface>
+			<statetype><![CDATA[keep state]]></statetype>
+			<descr><![CDATA[Allow Network Monitoring]]></descr>
+			<tag></tag>
+		</rule>
+		<rule>
+			<type>pass</type>
+			<source>
+				<any></any>
+			</source>
+			<destination>
+				<any></any>
+			</destination>
+			<os></os>
+			<interface>wan</interface>
+			<statetype><![CDATA[keep state]]></statetype>
+			<descr><![CDATA[Allow Network Monitoring]]></descr>
+			<tag></tag>
+		</rule>
+	</filter>
+	<ipsec>
+		<client></client>
+	</ipsec>
+	<aliases></aliases>
+	<proxyarp></proxyarp>
+	<!-- <cron> -->
+	<!-- 	<item> -->
+	<!-- 		<minute>*/1</minute> -->
+	<!-- 		<hour>*</hour> -->
+	<!-- 		<mday>*</mday> -->
+	<!-- 		<month>*</month> -->
+	<!-- 		<wday>*</wday> -->
+	<!-- 		<who>root</who> -->
+	<!-- 		<command>/usr/sbin/newsyslog</command> -->
+	<!-- 	</item> -->
+	<!-- 	<item> -->
+	<!-- 		<minute>1</minute> -->
+	<!-- 		<hour>3</hour> -->
+	<!-- 		<mday>*</mday> -->
+	<!-- 		<month>*</month> -->
+	<!-- 		<wday>*</wday> -->
+	<!-- 		<who>root</who> -->
+	<!-- 		<command>/etc/rc.periodic daily</command> -->
+	<!-- 	</item> -->
+	<!-- 	<item> -->
+	<!-- 		<minute>15</minute> -->
+	<!-- 		<hour>4</hour> -->
+	<!-- 		<mday>*</mday> -->
+	<!-- 		<month>*</month> -->
+	<!-- 		<wday>6</wday> -->
+	<!-- 		<who>root</who> -->
+	<!-- 		<command>/etc/rc.periodic weekly</command> -->
+	<!-- 	</item> -->
+	<!-- 	<item> -->
+	<!-- 		<minute>30</minute> -->
+	<!-- 		<hour>5</hour> -->
+	<!-- 		<mday>1</mday> -->
+	<!-- 		<month>*</month> -->
+	<!-- 		<wday>*</wday> -->
+	<!-- 		<who>root</who> -->
+	<!-- 		<command>/etc/rc.periodic monthly</command> -->
+	<!-- 	</item> -->
+	<!-- 	<item> -->
+	<!-- 		<minute>1,31</minute> -->
+	<!-- 		<hour>0-5</hour> -->
+	<!-- 		<mday>*</mday> -->
+	<!-- 		<month>*</month> -->
+	<!-- 		<wday>*</wday> -->
+	<!-- 		<who>root</who> -->
+	<!-- 		<command>/usr/bin/nice -n20 adjkerntz -a</command> -->
+	<!-- 	</item> -->
+	<!-- 	<item> -->
+	<!-- 		<minute>1</minute> -->
+	<!-- 		<hour>3</hour> -->
+	<!-- 		<mday>1</mday> -->
+	<!-- 		<month>*</month> -->
+	<!-- 		<wday>*</wday> -->
+	<!-- 		<who>root</who> -->
+	<!-- 		<command>/usr/bin/nice -n20 /etc/rc.update_bogons.sh</command> -->
+	<!-- 	</item> -->
+	<!-- 	<item> -->
+	<!-- 		<minute>1</minute> -->
+	<!-- 		<hour>1</hour> -->
+	<!-- 		<mday>*</mday> -->
+	<!-- 		<month>*</month> -->
+	<!-- 		<wday>*</wday> -->
+	<!-- 		<who>root</who> -->
+	<!-- 		<command>/usr/bin/nice -n20 /etc/rc.dyndns.update</command> -->
+	<!-- 	</item> -->
+	<!-- 	<item> -->
+	<!-- 		<minute>*/60</minute> -->
+	<!-- 		<hour>*</hour> -->
+	<!-- 		<mday>*</mday> -->
+	<!-- 		<month>*</month> -->
+	<!-- 		<wday>*</wday> -->
+	<!-- 		<who>root</who> -->
+	<!-- 		<command>/usr/bin/nice -n20 /usr/local/sbin/expiretable -v -t 3600 virusprot</command> -->
+	<!-- 	</item> -->
+	<!-- 	<item> -->
+	<!-- 		<minute>30</minute> -->
+	<!-- 		<hour>12</hour> -->
+	<!-- 		<mday>*</mday> -->
+	<!-- 		<month>*</month> -->
+	<!-- 		<wday>*</wday> -->
+	<!-- 		<who>root</who> -->
+	<!-- 		<command>/usr/bin/nice -n20 /etc/rc.update_urltables</command> -->
+	<!-- 	</item> -->
+	<!-- 	<item> -->
+	<!-- 		<minute>1</minute> -->
+	<!-- 		<hour>0</hour> -->
+	<!-- 		<mday>*</mday> -->
+	<!-- 		<month>*</month> -->
+	<!-- 		<wday>*</wday> -->
+	<!-- 		<who>root</who> -->
+	<!-- 		<command>/usr/bin/nice -n20 /etc/rc.update_pkg_metadata</command> -->
+	<!-- 	</item> -->
+	<!-- </cron> -->
+	<wol></wol>
+	<rrd>
+		<enable></enable>
+		<category>left=system-processor&amp;right=&amp;resolution=300&amp;timePeriod=-1d&amp;startDate=&amp;endDate=&amp;startTime=0&amp;endTime=0&amp;graphtype=line&amp;invert=true&amp;refresh-interval=0</category>
+	</rrd>
+	<widgets>
+		<sequence>system_information:col1:show,disks:col1:show,netgate_services_and_support:col2:show,interfaces:col2:show</sequence>
+		<period>10</period>
+	</widgets>
+	<openvpn></openvpn>
+	<dnshaper></dnshaper>
+	<unbound>
+		<enable></enable>
+		<dnssec></dnssec>
+		<active_interface></active_interface>
+		<outgoing_interface></outgoing_interface>
+		<custom_options></custom_options>
+		<hideidentity></hideidentity>
+		<hideversion></hideversion>
+		<dnssecstripped></dnssecstripped>
+	</unbound>
+	<vlans></vlans>
+	<qinqs></qinqs>
+	<revision>
+		<time>1722969298</time>
+		<description><![CDATA[admin@10.15.0.58 (Local Database): Changed system logging options.]]></description>
+		<username><![CDATA[admin@10.15.0.58 (Local Database)]]></username>
+	</revision>
+	<gateways>
+		<gateway_item>
+			<interface>wan</interface>
+			<gateway>100.80.4.1</gateway>
+			<name>wangw</name>
+			<weight>1</weight>
+			<descr><![CDATA[&lt;![CDATA[wan gateway]]&gt;]]></descr>
+			<defaultgw></defaultgw>
+		</gateway_item>
+	</gateways>
+	<shaper></shaper>
+	<dnsmasq>
+		<enable></enable>
+	</dnsmasq>
+	<ntpd></ntpd>
+	<cert>
+		<refid>63141ce592dff</refid>
+		<descr><![CDATA[webConfigurator default (63141ce592dff)]]></descr>
+		<type>server</type>
+		<crt>LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUVsRENDQTN5Z0F3SUJBZ0lJVHpDQ2Fib0ZtbXd3RFFZSktvWklodmNOQVFFTEJRQXdXakU0TURZR0ExVUUKQ2hNdmNHWlRaVzV6WlNCM1pXSkRiMjVtYVdkMWNtRjBiM0lnVTJWc1ppMVRhV2R1WldRZ1EyVnlkR2xtYVdOaApkR1V4SGpBY0JnTlZCQU1URlhCbVUyVnVjMlV0TmpNeE5ERmpaVFU1TW1SbVpqQWVGdzB5TWpBNU1EUXdNek0xCk1ERmFGdzB5TXpFd01EY3dNek0xTURGYU1Gb3hPREEyQmdOVkJBb1RMM0JtVTJWdWMyVWdkMlZpUTI5dVptbG4KZFhKaGRHOXlJRk5sYkdZdFUybG5ibVZrSUVObGNuUnBabWxqWVhSbE1SNHdIQVlEVlFRREV4VndabE5sYm5ObApMVFl6TVRReFkyVTFPVEprWm1Zd2dnRWlNQTBHQ1NxR1NJYjNEUUVCQVFVQUE0SUJEd0F3Z2dFS0FvSUJBUURlCnVuWXhvSm9WWXRyOFNsQnNBUlFUc1pyaDFUcGUrUEpNY3ZmNG5yTXpDL1IzWTZhSWVuWm1aY2k2WVBhREd6QisKb1hKRkc4VmtBVUVRQks2QndIRzA0ZEd6RDZZVnNjcmp4bWhzV1NoRU5DVDJJdUZRMUJZMDhOMDdiSVpFalh3LwoxdlpzTmlDWTJZTDVVVHZETmNHNnBuQ0ZYcTB1ZUNseHdpZWNUSGE1Yjk0TFZoREZsS0wvZWJabkN4Skc2NkwxCnRVWFRQZCtuMC9SdHVUaHAyRUMzSXVveEVlc3l3UHErZXMwOXp0NHlIblBRU0VDckdneFpma3JEL1NLdzRMVkMKcmZsdE45VTlCeWM4VW04azc2ZVZUZEI5RmRSeUt2MkVZWFBtN1ZwUjhaZGVsbDhJNmRSeHA5MEY5bm1yZzlmSwp2V2ZzSU9hRlNkWE9ycXNpNHNuMUFnTUJBQUdqZ2dGY01JSUJXREFKQmdOVkhSTUVBakFBTUJFR0NXQ0dTQUdHCitFSUJBUVFFQXdJR1FEQUxCZ05WSFE4RUJBTUNCYUF3TXdZSllJWklBWWI0UWdFTkJDWVdKRTl3Wlc1VFUwd2cKUjJWdVpYSmhkR1ZrSUZObGNuWmxjaUJEWlhKMGFXWnBZMkYwWlRBZEJnTlZIUTRFRmdRVTJBVHFnckg0SU0yeAoveTFxMDljUXNJNnJTZnN3Z1lzR0ExVWRJd1NCZ3pDQmdJQVUyQVRxZ3JINElNMngveTFxMDljUXNJNnJTZnVoClhxUmNNRm94T0RBMkJnTlZCQW9UTDNCbVUyVnVjMlVnZDJWaVEyOXVabWxuZFhKaGRHOXlJRk5sYkdZdFUybG4KYm1Wa0lFTmxjblJwWm1sallYUmxNUjR3SEFZRFZRUURFeFZ3WmxObGJuTmxMVFl6TVRReFkyVTFPVEprWm1hQwpDRTh3Z21tNkJacHNNQ2NHQTFVZEpRUWdNQjRHQ0NzR0FRVUZCd01CQmdnckJnRUZCUWNEQWdZSUt3WUJCUVVJCkFnSXdJQVlEVlIwUkJCa3dGNElWY0daVFpXNXpaUzAyTXpFME1XTmxOVGt5WkdabU1BMEdDU3FHU0liM0RRRUIKQ3dVQUE0SUJBUUE0K1ZBeURveVFlbFM0M1NpYlNWZ216L2hJYi9nUCtELzNqbmZvU2hJUDhCSzM2dEQ4NFZWZgp1TTVMVzczL3o2OHhvczE3bkM3Qmh0WTJpV3hzS2dOVHJ5U0VDWnFyYk5RWWhhUklzS1lTdlJuelZmRDZTOTl5Ck5HT2FGNVRwYVkwYmdjNnd6R3ludGplR2VZTkRqV3h1THUrUEgyVzJYbzNVVHgvc0d4SThvMnFheWduWEY4bjEKekdValpLNHFRc2VUMW9MVTZWdHNFaGlqeWw3Z21UOVF6V2hwZ1hhZ1ROYW1OMW5DNVlUOEJvcTJNSzlZa3RkTApLZ2lCLzRWMjlNSHdMZktwazVBa0ljTy9MeDBZT1hSUThrTXFTRjJncldBdU1FSUFFcVpVc0FxWU1oNE00QXJvClhuMnhseGV6bHg3MklKRzBYUWVFZUR1eWRTVlVZNzR0Ci0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K</crt>
+		<prv>LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tCk1JSUV2UUlCQURBTkJna3Foa2lHOXcwQkFRRUZBQVNDQktjd2dnU2pBZ0VBQW9JQkFRRGV1bll4b0pvVll0cjgKU2xCc0FSUVRzWnJoMVRwZStQSk1jdmY0bnJNekMvUjNZNmFJZW5abVpjaTZZUGFER3pCK29YSkZHOFZrQVVFUQpCSzZCd0hHMDRkR3pENllWc2NyanhtaHNXU2hFTkNUMkl1RlExQlkwOE4wN2JJWkVqWHcvMXZac05pQ1kyWUw1ClVUdkROY0c2cG5DRlhxMHVlQ2x4d2llY1RIYTViOTRMVmhERmxLTC9lYlpuQ3hKRzY2TDF0VVhUUGQrbjAvUnQKdVRocDJFQzNJdW94RWVzeXdQcStlczA5enQ0eUhuUFFTRUNyR2d4WmZrckQvU0t3NExWQ3JmbHROOVU5QnljOApVbThrNzZlVlRkQjlGZFJ5S3YyRVlYUG03VnBSOFpkZWxsOEk2ZFJ4cDkwRjlubXJnOWZLdldmc0lPYUZTZFhPCnJxc2k0c24xQWdNQkFBRUNnZ0VCQUx2NmcyYS9OVXgzY25zYi9XUXFSTmVhUGkzNzJKZnZaQkJCdUNlTlNaRDcKdGdoTmduQU5hNEJneDFrR0hRZnFHclBGYnJ3RkJFT3pDMGFKclA2MWZVSThsTStibFlFWjNUTUFjWUdBZmd1UwpOdC9GOElSWGU2YVM0eVVVSXY0WXE1VDF5R1RzQ2ZiM0hTTnUvQkYxZlZ3YXZUelMremNORTIxL2dBN2FPaG1tClRPVTFPdjBzQlNXNFlMVy9aRnN5VXdNNnY3eFQwK0NOZzlkRDk0UkJ3eXJGemlyM1BBNmxtb3RoNnNtM2R5QlkKYXQwZ29UakFQRGo1RWtnL0RrVzhwWW14bjJaSS92RmpXRUJwV1RtWnE5bUtwRkl4VVlnN0E3VDNrSXFQM2ZMZgpFTU85YzhzRWF6by9NVFdvTDN4NTZNU3I1R1k2c1puSUJRSUdtNnZMWUFFQ2dZRUEvWmVpQ0lmVUpPRmxjeERxClIzSFpxb21XR2tiOWFUZDNrWjFrL3YvaW52aFdrOE9mMkJJckxUSnVpaFFMWXFaZXc1ZUdJb1M3MUVFa3NGL3QKQjV3SUh5SjlEZGtmUE44TkIwNUUzYUdDbDRwN1RUTlAzQjJSMlJ2MkJ3bEtBUTZ3WCtIa1pjSENBWXA0MFMzRQpKK1hBeG44MHhiQjRkUnoycDV4R3JmclpmNEVDZ1lFQTROZlFCZTg1UXdQek5LN0V4YXgxVzNxbGZPWWlubFZBClRMbFdKOEJXQTVXN1E1MVZLV1BST1lMaHVrS1BrVnJ6UUUxd2wreE4xSm1NSVFNeUk4d21YUk5ydi8rNjBnR00KZTNFTGMwbElBdGlWcHNZbjJiUFlqTko4SXJxdTc0QzdkZmw3YjZZZ2lhdlJ3czVnelBsN05sUDBRNmh5RFZkNApiejRnZHZZOWhIVUNnWUJjWVJxVHhQZFJJQkxXNGZpV1lqRUs0T2dmVm5FR0hVQ2ZlUmpMaytlNFJYczBoUFQ3CnYxS2ZPbG51VHZMKzB1QittL292Sk85UG1ST0dkTXRpRkVNWkpIVXQwRVNDNWpaV3pQcGxTbXJLVFpZeFAxbisKTTM5bitibWNRcFFFNHBiNXRzNS9DeUJqYzFBajAybzdwb1NkU3NXc3BtYWJNeHZmWHh5WVVHTmZBUUtCZ0FGUApnTGpvSWc5UDhKVDRCOUdYSmIvNHdRb3ZWVGhUQ3VMbm1hYjFxZ3F2VHI0Z0pxVHRIZ1VWekRjSHVFcUNtelJlCnZ5OURnMWlmNUg4MHc1QU4ycE5rVDVaNDZSL2NQbk5odjAxV3VnSzZQSFVTWnAwUVBVemsxVEJtb2lwbk43Q0MKV2NQVzFnMjNZS3VnQkZSdGg5aFRPUE5FQWhZdDBsZmpwdERLc3FVWkFvR0FkRCtVd2xncVJhdC94OG1HMm1LKwpTQ3JMc1JmeHg4UWVHRXVaNitHMVFUNFBueGh1clZNdnhNekUrSmt1U2taa0dKeVBvSjRYaUhTSXZhM1UvdThGCmpsQnBVNWtQKzdXZzBBd3dndmhUYmdSdHIvZm40dUN4ZFhnV0sxck0ySlJmMTJPMXVqb1RyVGxNT2Foa2lUMUIKNlVCWkF5dEQ2anNNKzN4dFJ4bGQzVVU9Ci0tLS0tRU5EIFBSSVZBVEUgS0VZLS0tLS0K</prv>
+	</cert>
+	<virtualip>
+		<vip>
+			<mode>proxyarp</mode>
+			<interface>wan</interface>
+			<descr><![CDATA[Proxy ARP for lan]]></descr>
+			<type>network</type>
+			<subnet_bits>25</subnet_bits>
+			<subnet>100.80.4.128</subnet>
+			<uniqid>669746fc1f390</uniqid>
+		</vip>
+		<vip>
+			<mode>proxyarp</mode>
+			<interface>wan</interface>
+			<descr><![CDATA[Proxy ARP for dmz]]></descr>
+			<type>network</type>
+			<subnet_bits>25</subnet_bits>
+			<subnet>100.80.5.0</subnet>
+			<uniqid>669746fc1f393</uniqid>
+		</vip>
+		<vip>
+			<mode>proxyarp</mode>
+			<interface>wan</interface>
+			<descr><![CDATA[Proxy ARP for datacenter]]></descr>
+			<type>network</type>
+			<subnet_bits>25</subnet_bits>
+			<subnet>100.80.5.128</subnet>
+			<uniqid>669746fc1f395</uniqid>
+		</vip>
+	</virtualip>
+	<nat>
+		<outbound>
+			<mode>disabled</mode>
+		</outbound>
+	</nat>
+	<installedpackages>
+		<openntpd>
+			<config>
+				<enable>on</enable>
+				<interface>wan,lan,lo0</interface>
+			</config>
+		</openntpd>
+		<miniupnpd>
+			<config>
+				<enable>on</enable>
+				<enable_upnp>on</enable_upnp>
+				<enable_natpmp>on</enable_natpmp>
+				<ext_iface>wan</ext_iface>
+				<iface_array>lan,lo0</iface_array>
+				<download></download>
+				<upload></upload>
+				<overridewanip></overridewanip>
+				<upnpqueue></upnpqueue>
+				<logpackets>on</logpackets>
+				<sysuptime></sysuptime>
+				<permdefault>on</permdefault>
+				<enable_stun></enable_stun>
+				<stun_host></stun_host>
+				<stun_port></stun_port>
+				<row>
+					<permuser></permuser>
+				</row>
+				<presentationurl></presentationurl>
+				<modelnumber></modelnumber>
+			</config>
+		</miniupnpd>
+		<routed>
+			<config>
+				<enable>on</enable>
+				<iface_array>wan,lan,lo0</iface_array>
+				<ripversion>2</ripversion>
+				<!-- <passwd></passwd> -->
+			</config>
+		</routed>
+	</installedpackages>
+</pfsense>
