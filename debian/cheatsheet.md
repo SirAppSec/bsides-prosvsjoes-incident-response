@@ -1,9 +1,6 @@
- a detailed Linux hardening and incident response (IR) cheatsheet with templated commands using placeholders that you can replace and use directly. Each command or action is categorized for clarity.
+# Phase 2: Linux Host Containment & Eradiation
 
----
-
-### Linux Hardening and Incident Response Cheatsheet
-## Lock all users except IR account
+## Emergency Access Control
 
 #### Linux Administration
 
@@ -170,62 +167,37 @@ netstat -panut
 
 ---
 
-Use these placeholders to replace the actual variables like IP, PORT, DIRECTORY, SCORED_SERVICE, DEPENDENT_SERVICE, ACCOUNT, ADDRESS, NEW_PASSWORD, USERNAME, and WEB_GROUP according to your environment and requirements.
+## Emergency Process Management
+```bash
+# Kill all processes by name
+pkill -f "malicious_process"
+killall -9 nc netcat python perl
+
+# Kill processes by user
+pkill -u suspicious_user
+
+# Kill processes on specific ports
+fuser -k 4444/tcp
+fuser -k 5555/tcp
+
+# Monitor for new processes
+watch -n 1 'ps aux --sort=-%cpu | head -10'
 ```
+
+## Network Isolation
+```bash
+# Block specific IPs with iptables
+iptables -I INPUT -s MALICIOUS_IP -j DROP
+iptables -I OUTPUT -d MALICIOUS_IP -j DROP
+
+# Block port ranges
+iptables -I INPUT -p tcp --dport 4444:9999 -j DROP
+iptables -I OUTPUT -p tcp --dport 4444:9999 -j DROP
+
+# Save iptables rules
+iptables-save > /etc/iptables/rules.v4
 ```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
+
+---
+
+**Variables to replace:** IP, PORT, DIRECTORY, SCORED_SERVICE, DEPENDENT_SERVICE, ACCOUNT, ADDRESS, NEW_PASSWORD, USERNAME, WEB_GROUP, MALICIOUS_IP

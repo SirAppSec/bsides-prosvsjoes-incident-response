@@ -1,9 +1,30 @@
-# Incident Response
-cheatsheet
+# BSides LV Pros vs Joes - Incident Response Cheatsheet
+
+This repository contains organized defensive commands for rapid incident response during the competition.
+
+## Incident Response Phases
+
+### Phase 1: Discovery & Initial Assessment
+- [Initial Triage Commands](./phase1-discovery.md)
+
+### Phase 2: Containment & Eradication  
+- [Immediate Containment](./phase2-containment.md)
+- [Linux Host Commands](./debian/cheatsheet.md)
+- [pfSense Network Defense](./FreeBSD/pfSenseBackUp.md)
+
+### Phase 3: Recovery & Hardening
+- [System Recovery](./phase3-recovery.md)
+
+### Phase 4: Monitoring & Prevention
+- [Continuous Monitoring](./phase4-monitoring.md)
+
+## Quick Reference
+- **Linux Commands**: `./debian/`
+- **pfSense Commands**: `./FreeBSD/`
+- **Web App Security**: `./debian/webapps/`
 
 
-
-### If using vim, use the following lua script to run commands in terminal:
+### If using neovim, use the following lua script to run commands in terminal:
 
 ```lua
 
